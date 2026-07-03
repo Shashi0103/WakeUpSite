@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "id": "rw8hxrk",
+      "firebase_uid": "mock-uid-demo@gmail.com",
+      "name": "demo",
+      "email": "demo@gmail.com",
+      "created_at": "2026-07-03T07:24:09.939Z"
+    }
+  ],
+  "websites": []
+}

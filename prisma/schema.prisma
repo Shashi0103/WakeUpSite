@@ -1,0 +1,33 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String    @id @default(uuid())
+  firebase_uid String    @unique
+  name         String?
+  email        String    @unique
+  created_at   DateTime  @default(now())
+  websites     Website[]
+}
+
+model Website {
+  id               String    @id @default(uuid())
+  user_id          String
+  user             User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  website_name     String
+  website_url      String
+  schedule_minutes Int
+  enabled          Boolean   @default(true)
+  last_ping_at     DateTime?
+  next_ping_at     DateTime?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  @@unique([user_id, website_url])
+  @@index([next_ping_at, enabled])
+}
