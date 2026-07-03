@@ -66,9 +66,6 @@ FIREBASE_CLIENT_EMAIL="firebase-adminsdk-xxxxx@your-project-id.iam.gserviceaccou
 FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQ...\n-----END PRIVATE KEY-----"
 ```
 
-> [!NOTE]
-> Make sure to replace `\n` characters in your `FIREBASE_PRIVATE_KEY` with actual newlines or store it exactly as shown so that they parse correctly.
-
 ---
 
 ## Getting Started
