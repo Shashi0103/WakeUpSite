@@ -10,7 +10,10 @@ const getAdminAuth = () => {
   } else {
     const projectId = process.env.FIREBASE_PROJECT_ID;
     const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY
+      ?.replace(/\\n/g, '\n')
+      ?.replace(/^"/, '')   // Remove leading quote if copied directly from JSON
+      ?.replace(/"$/, '');  // Remove trailing quote if copied directly from JSON
 
     // Build-time check for placeholders
     if (!projectId || !clientEmail || !privateKey || privateKey.includes('PLACEHOLDER')) {
