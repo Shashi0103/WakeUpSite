@@ -4,6 +4,11 @@ import pg from 'pg';
 
 const { Pool } = pg;
 
+// Sanitize DATABASE_URL to remove any accidental wrapping quotes
+if (process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = process.env.DATABASE_URL.trim().replace(/^"/, '').replace(/"$/, '');
+}
+
 // Prevent multiple database connections in development hot-reloading
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
