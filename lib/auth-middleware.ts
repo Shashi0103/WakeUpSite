@@ -1,5 +1,5 @@
-import { adminAuth } from './firebase-admin';
 import { mockDb } from './db-mock';
+import { verifyFirebaseToken } from './firebase-token-verifier';
 
 export interface AuthUser {
   uid: string;
@@ -29,8 +29,12 @@ export async function verifyAuth(req: Request): Promise<AuthUser | null> {
       };
     }
 
-    // Verify the Firebase ID Token
-    const decodedToken = await adminAuth.verifyIdToken(token);
+    // Verify the Firebase ID Token using native crypto module
+    const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID;
+    if (!projectId) {
+      throw new Error('Firebase Project ID is not configured in environment variables');
+    }
+    const decodedToken = await verifyFirebaseToken(token, projectId);
     return {
       uid: decodedToken.uid,
       email: decodedToken.email || '',
