@@ -408,7 +408,7 @@ export default function LandingPage() {
                     </li>
                     <li className="flex items-center gap-2.5 text-sm">
                       <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
-                      <span>Custom wake-up schedule (min. 15 mins)</span>
+                      <span>Custom wake-up schedule (min. 10 mins)</span>
                     </li>
                     <li className="flex items-center gap-2.5 text-sm">
                       <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />

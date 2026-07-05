@@ -8,6 +8,7 @@ interface MockUser {
   firebase_uid: string;
   name: string | null;
   email: string;
+  is_pro: boolean;
   created_at: string;
 }
 
@@ -65,6 +66,7 @@ export const mockDb = {
         firebase_uid: firebaseUid,
         name,
         email,
+        is_pro: false,
         created_at: new Date().toISOString(),
       };
       db.users.push(user);

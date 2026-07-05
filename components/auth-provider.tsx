@@ -19,6 +19,7 @@ interface DbUser {
   firebase_uid: string;
   name: string | null;
   email: string;
+  is_pro: boolean;
   created_at: string;
 }
 

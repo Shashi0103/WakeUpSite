@@ -76,13 +76,13 @@ export async function POST(req: Request) {
       }
 
       const minutes = parseInt(schedule_minutes, 10);
-      if (isNaN(minutes) || minutes < 15 || minutes > 1440) {
-        return NextResponse.json({ error: 'Schedule must be between 15 and 1440 minutes for the Free tier.' }, { status: 400 });
+      if (isNaN(minutes) || minutes < 10 || minutes > 1440) {
+        return NextResponse.json({ error: 'Schedule must be between 10 and 1440 minutes for the Free tier.' }, { status: 400 });
       }
 
       const websites = await mockDb.getWebsites(user.id);
       if (websites.length >= 5) {
-        return NextResponse.json({ error: 'Free tier is limited to 5 websites. Pro tier coming soon!' }, { status: 400 });
+        return NextResponse.json({ error: 'Free tier is limited to 5 websites. Upgrade to Pro for unlimited websites!' }, { status: 400 });
       }
 
       const duplicate = websites.find((w) => w.website_url === trimmedUrl);
@@ -117,17 +117,20 @@ export async function POST(req: Request) {
     }
 
     const minutes = parseInt(schedule_minutes, 10);
-    if (isNaN(minutes) || minutes < 15 || minutes > 1440) {
-      return NextResponse.json({ error: 'Schedule must be between 15 and 1440 minutes for the Free tier.' }, { status: 400 });
+    const minMinutes = user.is_pro ? 5 : 10;
+    if (isNaN(minutes) || minutes < minMinutes || minutes > 1440) {
+      return NextResponse.json({ error: `Schedule must be between ${minMinutes} and 1440 minutes.` }, { status: 400 });
     }
 
-    // Check tier limits (Free tier: max 5 websites)
-    const count = await db.website.count({
-      where: { user_id: user.id },
-    });
+    // Check tier limits (Free tier: max 5 websites, Pro tier: unlimited)
+    if (!user.is_pro) {
+      const count = await db.website.count({
+        where: { user_id: user.id },
+      });
 
-    if (count >= 5) {
-      return NextResponse.json({ error: 'Free tier is limited to 5 websites. Pro tier coming soon!' }, { status: 400 });
+      if (count >= 5) {
+        return NextResponse.json({ error: 'Free tier is limited to 5 websites. Upgrade to Pro for unlimited websites!' }, { status: 400 });
+      }
     }
 
     // Check for duplicates

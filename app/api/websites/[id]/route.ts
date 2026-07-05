@@ -63,8 +63,8 @@ export async function PUT(
 
       if (schedule_minutes !== undefined) {
         const minutes = parseInt(schedule_minutes, 10);
-        if (isNaN(minutes) || minutes < 15 || minutes > 1440) {
-          return NextResponse.json({ error: 'Schedule must be between 15 and 1440 minutes for the Free tier.' }, { status: 400 });
+        if (isNaN(minutes) || minutes < 10 || minutes > 1440) {
+          return NextResponse.json({ error: 'Schedule must be between 10 and 1440 minutes for the Free tier.' }, { status: 400 });
         }
         updateData.schedule_minutes = minutes;
       }
@@ -142,8 +142,9 @@ export async function PUT(
 
     if (schedule_minutes !== undefined) {
       const minutes = parseInt(schedule_minutes, 10);
-      if (isNaN(minutes) || minutes < 15 || minutes > 1440) {
-        return NextResponse.json({ error: 'Schedule must be between 15 and 1440 minutes for the Free tier.' }, { status: 400 });
+      const minMinutes = user.is_pro ? 5 : 10;
+      if (isNaN(minutes) || minutes < minMinutes || minutes > 1440) {
+        return NextResponse.json({ error: `Schedule must be between ${minMinutes} and 1440 minutes.` }, { status: 400 });
       }
       updateData.schedule_minutes = minutes;
     }

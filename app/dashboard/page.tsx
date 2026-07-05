@@ -171,8 +171,9 @@ export default function DashboardPage() {
       toast.error('Please enter a website URL.');
       return false;
     }
-    if (isNaN(minutes) || minutes < 15 || minutes > 1440) {
-      toast.error('Schedule minutes must be an integer between 15 and 1440 (24 hours) for the Free tier.');
+    const minMinutes = dbUser?.is_pro ? 5 : 10;
+    if (isNaN(minutes) || minutes < minMinutes || minutes > 1440) {
+      toast.error(`Schedule minutes must be an integer between ${minMinutes} and 1440 (24 hours).`);
       return false;
     }
     return true;
@@ -764,8 +765,10 @@ export default function DashboardPage() {
                     onChange={(e) => setScheduleSelect(e.target.value)}
                     className="w-full px-3 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
                   >
-                    <option value="5" disabled>Every 5 Minutes (Pro Only)</option>
-                    <option value="10" disabled>Every 10 Minutes (Pro Only)</option>
+                    <option value="5" disabled={!dbUser?.is_pro}>
+                      Every 5 Minutes {!dbUser?.is_pro && "(Pro Only)"}
+                    </option>
+                    <option value="10">Every 10 Minutes</option>
                     <option value="15">Every 15 Minutes</option>
                     <option value="30">Every 30 Minutes</option>
                     <option value="60">Every 1 Hour</option>
@@ -782,14 +785,16 @@ export default function DashboardPage() {
                       id="add-custom-mins"
                       type="number"
                       required
-                      min="15"
+                      min={dbUser?.is_pro ? "5" : "10"}
                       max="1440"
                       value={customMinutesInput}
                       onChange={(e) => setCustomMinutesInput(e.target.value)}
-                      placeholder="Minutes (15 to 1440)"
+                      placeholder={dbUser?.is_pro ? "Minutes (5 to 1440)" : "Minutes (10 to 1440)"}
                       className="w-full px-3 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
                     />
-                    <p className="text-[10px] text-muted-foreground mt-1">Minimum 15 minutes required for the Free tier.</p>
+                    <p className="text-[10px] text-muted-foreground mt-1">
+                      Minimum {dbUser?.is_pro ? "5" : "10"} minutes required for your tier.
+                    </p>
                   </div>
                 )}
 
@@ -883,8 +888,10 @@ export default function DashboardPage() {
                     onChange={(e) => setScheduleSelect(e.target.value)}
                     className="w-full px-3 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
                   >
-                    <option value="5" disabled>Every 5 Minutes (Pro Only)</option>
-                    <option value="10" disabled>Every 10 Minutes (Pro Only)</option>
+                    <option value="5" disabled={!dbUser?.is_pro}>
+                      Every 5 Minutes {!dbUser?.is_pro && "(Pro Only)"}
+                    </option>
+                    <option value="10">Every 10 Minutes</option>
                     <option value="15">Every 15 Minutes</option>
                     <option value="30">Every 30 Minutes</option>
                     <option value="60">Every 1 Hour</option>
@@ -901,14 +908,16 @@ export default function DashboardPage() {
                       id="edit-custom-mins"
                       type="number"
                       required
-                      min="15"
+                      min={dbUser?.is_pro ? "5" : "10"}
                       max="1440"
                       value={customMinutesInput}
                       onChange={(e) => setCustomMinutesInput(e.target.value)}
-                      placeholder="Minutes (15 to 1440)"
+                      placeholder={dbUser?.is_pro ? "Minutes (5 to 1440)" : "Minutes (10 to 1440)"}
                       className="w-full px-3 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
                     />
-                    <p className="text-[10px] text-muted-foreground mt-1">Minimum 15 minutes required for the Free tier.</p>
+                    <p className="text-[10px] text-muted-foreground mt-1">
+                      Minimum {dbUser?.is_pro ? "5" : "10"} minutes required for your tier.
+                    </p>
                   </div>
                 )}
 
