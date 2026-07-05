@@ -100,6 +100,7 @@ if (typeof window === 'undefined') {
               fetch(site.website_url, {
                 method: 'GET',
                 headers: { 'User-Agent': 'WakeUpSite-Ping-Bot/1.0' },
+                redirect: 'manual',
               })
                 .then(async (res) => {
                   console.log(`[Mock Worker] Ping returned status ${res.status}`);
@@ -134,6 +135,7 @@ if (typeof window === 'undefined') {
             fetch(site.website_url, {
               method: 'GET',
               headers: { 'User-Agent': 'WakeUpSite-Ping-Bot/1.0' },
+              redirect: 'manual',
             })
               .then(async (res) => {
                 console.log(`[Worker] Ping returned status ${res.status}`);

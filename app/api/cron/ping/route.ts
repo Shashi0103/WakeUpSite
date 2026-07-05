@@ -65,6 +65,7 @@ export async function GET(req: Request) {
           const res = await fetch(site.website_url, {
             method: 'GET',
             headers: { 'User-Agent': 'WakeUpSite-Ping-Bot/1.0' },
+            redirect: 'manual',
             signal: controller.signal,
           });
           clearTimeout(timeoutId);
