@@ -57,7 +57,11 @@ interface MockWebsiteRecord {
 if (typeof window === 'undefined') {
   const globalForWorker = globalThis as unknown as { pingWorkerStarted: boolean | undefined };
 
-  if (!globalForWorker.pingWorkerStarted) {
+  const shouldStartWorker =
+    process.env.NODE_ENV !== 'production' ||
+    process.env.ENABLE_IN_MEMORY_WORKER === 'true';
+
+  if (!globalForWorker.pingWorkerStarted && shouldStartWorker) {
     globalForWorker.pingWorkerStarted = true;
     console.log("[Worker] Starting lightweight in-memory background website ping scheduler...");
 
