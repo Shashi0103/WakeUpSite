@@ -124,7 +124,7 @@ export default function DashboardPage() {
     setSelectedWebsite(website);
     setNameInput(website.website_name);
     setUrlInput(website.website_url);
-    const standardSchedules = ['5', '10', '15', '30', '60'];
+    const standardSchedules = ['5', '10', '15', '30', '60', '480'];
     const minsStr = website.schedule_minutes.toString();
     
     if (standardSchedules.includes(minsStr)) {
@@ -749,10 +749,22 @@ export default function DashboardPage() {
                     type="text"
                     required
                     value={urlInput}
-                    onChange={(e) => setUrlInput(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setUrlInput(val);
+                      if (val.toLowerCase().includes('.streamlit.app') && !urlInput.toLowerCase().includes('.streamlit.app')) {
+                        setScheduleSelect('480');
+                      }
+                    }}
                     placeholder="https://my-app.render.com"
                     className="w-full px-3 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
                   />
+                  {urlInput.toLowerCase().includes('.streamlit.app') && (
+                    <p className="text-[11px] text-orange-500 font-semibold mt-1.5 flex items-center gap-1">
+                      <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                      Streamlit URL detected: Set to 8 hours to stay inside Browserless free limits.
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -772,6 +784,7 @@ export default function DashboardPage() {
                     <option value="15">Every 15 Minutes</option>
                     <option value="30">Every 30 Minutes</option>
                     <option value="60">Every 1 Hour</option>
+                    <option value="480">Every 8 Hours (Recommended for Streamlit)</option>
                     <option value="custom">Custom</option>
                   </select>
                 </div>
@@ -872,10 +885,22 @@ export default function DashboardPage() {
                     type="text"
                     required
                     value={urlInput}
-                    onChange={(e) => setUrlInput(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setUrlInput(val);
+                      if (val.toLowerCase().includes('.streamlit.app') && !urlInput.toLowerCase().includes('.streamlit.app')) {
+                        setScheduleSelect('480');
+                      }
+                    }}
                     placeholder="https://my-app.render.com"
                     className="w-full px-3 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
                   />
+                  {urlInput.toLowerCase().includes('.streamlit.app') && (
+                    <p className="text-[11px] text-orange-500 font-semibold mt-1.5 flex items-center gap-1">
+                      <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                      Streamlit URL detected: Set to 8 hours to stay inside Browserless free limits.
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -895,6 +920,7 @@ export default function DashboardPage() {
                     <option value="15">Every 15 Minutes</option>
                     <option value="30">Every 30 Minutes</option>
                     <option value="60">Every 1 Hour</option>
+                    <option value="480">Every 8 Hours (Recommended for Streamlit)</option>
                     <option value="custom">Custom</option>
                   </select>
                 </div>
