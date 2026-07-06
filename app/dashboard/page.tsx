@@ -720,7 +720,7 @@ export default function DashboardPage() {
               className="relative w-full max-w-md bg-card text-card-foreground border border-border shadow-xl rounded-2xl overflow-hidden p-6 z-10"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold">Add Monitored Website</h3>
+                <h3 className="text-lg font-bold">Add Website to Wake Up Always</h3>
                 <button onClick={closeModals} className="text-muted-foreground hover:text-foreground">
                   <X className="h-5 w-5" />
                 </button>
