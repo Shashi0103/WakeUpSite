@@ -374,9 +374,9 @@ export default function LandingPage() {
                     </div>
 
                     <div className="bg-secondary/40 rounded-xl p-4 text-xs space-y-1.5 border border-border">
-                      <h4 className="font-bold text-primary uppercase tracking-wider text-[10px]">Option 2: Direct Streamlit Link (Headless Browser)</h4>
+                      <h4 className="font-bold text-primary uppercase tracking-wider text-[10px]">Option 2: Direct Streamlit Link</h4>
                       <p className="text-muted-foreground leading-normal">
-                        Paste your Streamlit link directly! To protect free cloud resources, Streamlit URLs are strictly restricted to an <strong>8 to 10 hour interval</strong>. This is fully sufficient since Streamlit apps only hibernate after 12 hours of total inactivity. Our system will automatically launch a headless cloud browser to click the wake button for you!
+                        Paste your Streamlit link directly! Streamlit URLs are configured with an <strong>8 to 10 hour interval</strong>, which is fully sufficient to prevent them from hibernating. Our system automatically triggers the wake-up sequence and keeps your app online 24/7.
                       </p>
                     </div>
 
