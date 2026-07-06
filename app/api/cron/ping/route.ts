@@ -163,7 +163,6 @@ export async function GET(req: Request) {
 
             return { site: siteRecord.website_name, status: res.status, success: true };
           } catch (err: any) {
-            console.error(`[Cron Job] Ping failed for ${siteRecord.website_name}:`, err.message);
             const nextPing = new Date(Date.now() + siteRecord.schedule_minutes * 60 * 1000);
 
             if (isMock) {
@@ -181,6 +180,12 @@ export async function GET(req: Request) {
               });
             }
 
+            if (err.name === 'AbortError') {
+              console.log(`[Cron Job] Ping for ${siteRecord.website_name} timed out after 10s. This is common for sleeping containers (like Render/Railway) and still successfully triggers their wake-up.`);
+              return { site: siteRecord.website_name, status: 'timeout-triggered', success: true };
+            }
+
+            console.error(`[Cron Job] Ping failed for ${siteRecord.website_name}:`, err.message);
             return { site: siteRecord.website_name, error: err.message, success: false };
           }
         }
