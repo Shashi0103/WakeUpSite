@@ -76,6 +76,12 @@ export async function PUT(
       const currentEnabled = enabled !== undefined ? Boolean(enabled) : website.enabled;
       const currentMinutes = schedule_minutes !== undefined ? parseInt(schedule_minutes, 10) : website.schedule_minutes;
 
+      const currentUrl = website_url !== undefined ? website_url.trim() : website.website_url;
+      const isStreamlit = currentUrl.toLowerCase().includes('.streamlit.app');
+      if (isStreamlit && currentMinutes !== 480 && currentMinutes !== 600) {
+        return NextResponse.json({ error: 'Streamlit websites strictly require an interval of 8 hours (480 mins) or 10 hours (600 mins).' }, { status: 400 });
+      }
+
       if (
         (enabled !== undefined && enabled && !website.enabled) ||
         (schedule_minutes !== undefined && currentMinutes !== website.schedule_minutes) ||
@@ -158,6 +164,12 @@ export async function PUT(
     // - or the schedule is changed
     const currentEnabled = enabled !== undefined ? Boolean(enabled) : website.enabled;
     const currentMinutes = schedule_minutes !== undefined ? parseInt(schedule_minutes, 10) : website.schedule_minutes;
+
+    const currentUrl = website_url !== undefined ? website_url.trim() : website.website_url;
+    const isStreamlit = currentUrl.toLowerCase().includes('.streamlit.app');
+    if (isStreamlit && currentMinutes !== 480 && currentMinutes !== 600) {
+      return NextResponse.json({ error: 'Streamlit websites strictly require an interval of 8 hours (480 mins) or 10 hours (600 mins).' }, { status: 400 });
+    }
 
     if (
       (enabled !== undefined && enabled && !website.enabled) ||

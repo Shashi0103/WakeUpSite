@@ -124,7 +124,7 @@ export default function DashboardPage() {
     setSelectedWebsite(website);
     setNameInput(website.website_name);
     setUrlInput(website.website_url);
-    const standardSchedules = ['5', '10', '15', '30', '60', '480'];
+    const standardSchedules = ['5', '10', '15', '30', '60', '480', '600'];
     const minsStr = website.schedule_minutes.toString();
     
     if (standardSchedules.includes(minsStr)) {
@@ -347,6 +347,8 @@ export default function DashboardPage() {
     if (mins === 15) return 'Every 15 Mins';
     if (mins === 30) return 'Every 30 Mins';
     if (mins === 60) return 'Every 1 Hour';
+    if (mins === 480) return 'Every 8 Hours';
+    if (mins === 600) return 'Every 10 Hours';
     if (mins >= 60 && mins % 60 === 0) return `Every ${mins / 60} Hours`;
     return `Every ${mins} Mins`;
   };
@@ -752,8 +754,10 @@ export default function DashboardPage() {
                     onChange={(e) => {
                       const val = e.target.value;
                       setUrlInput(val);
-                      if (val.toLowerCase().includes('.streamlit.app') && !urlInput.toLowerCase().includes('.streamlit.app')) {
-                        setScheduleSelect('480');
+                      if (val.toLowerCase().includes('.streamlit.app')) {
+                        if (scheduleSelect !== '480' && scheduleSelect !== '600') {
+                          setScheduleSelect('480');
+                        }
                       }
                     }}
                     placeholder="https://my-app.render.com"
@@ -762,7 +766,7 @@ export default function DashboardPage() {
                   {urlInput.toLowerCase().includes('.streamlit.app') && (
                     <p className="text-[11px] text-orange-500 font-semibold mt-1.5 flex items-center gap-1">
                       <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                      Streamlit URL detected: Set to 8 hours to stay inside Browserless free limits.
+                      Streamlit URL detected: Limited strictly to 8 or 10 hours to protect limits.
                     </p>
                   )}
                 </div>
@@ -777,15 +781,24 @@ export default function DashboardPage() {
                     onChange={(e) => setScheduleSelect(e.target.value)}
                     className="w-full px-3 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
                   >
-                    <option value="5" disabled={!dbUser?.is_pro}>
-                      Every 5 Minutes {!dbUser?.is_pro && "(Pro Only)"}
-                    </option>
-                    <option value="10">Every 10 Minutes</option>
-                    <option value="15">Every 15 Minutes</option>
-                    <option value="30">Every 30 Minutes</option>
-                    <option value="60">Every 1 Hour</option>
-                    <option value="480">Every 8 Hours (Recommended for Streamlit)</option>
-                    <option value="custom">Custom</option>
+                    {urlInput.toLowerCase().includes('.streamlit.app') ? (
+                      <>
+                        <option value="480">Every 8 Hours (Recommended)</option>
+                        <option value="600">Every 10 Hours</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="5" disabled={!dbUser?.is_pro}>
+                          Every 5 Minutes {!dbUser?.is_pro && "(Pro Only)"}
+                        </option>
+                        <option value="10">Every 10 Minutes</option>
+                        <option value="15">Every 15 Minutes</option>
+                        <option value="30">Every 30 Minutes</option>
+                        <option value="60">Every 1 Hour</option>
+                        <option value="480">Every 8 Hours (Recommended for Streamlit)</option>
+                        <option value="custom">Custom</option>
+                      </>
+                    )}
                   </select>
                 </div>
 
@@ -888,8 +901,10 @@ export default function DashboardPage() {
                     onChange={(e) => {
                       const val = e.target.value;
                       setUrlInput(val);
-                      if (val.toLowerCase().includes('.streamlit.app') && !urlInput.toLowerCase().includes('.streamlit.app')) {
-                        setScheduleSelect('480');
+                      if (val.toLowerCase().includes('.streamlit.app')) {
+                        if (scheduleSelect !== '480' && scheduleSelect !== '600') {
+                          setScheduleSelect('480');
+                        }
                       }
                     }}
                     placeholder="https://my-app.render.com"
@@ -898,7 +913,7 @@ export default function DashboardPage() {
                   {urlInput.toLowerCase().includes('.streamlit.app') && (
                     <p className="text-[11px] text-orange-500 font-semibold mt-1.5 flex items-center gap-1">
                       <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-                      Streamlit URL detected: Set to 8 hours to stay inside Browserless free limits.
+                      Streamlit URL detected: Limited strictly to 8 or 10 hours to protect limits.
                     </p>
                   )}
                 </div>
@@ -913,15 +928,24 @@ export default function DashboardPage() {
                     onChange={(e) => setScheduleSelect(e.target.value)}
                     className="w-full px-3 py-2 text-sm bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
                   >
-                    <option value="5" disabled={!dbUser?.is_pro}>
-                      Every 5 Minutes {!dbUser?.is_pro && "(Pro Only)"}
-                    </option>
-                    <option value="10">Every 10 Minutes</option>
-                    <option value="15">Every 15 Minutes</option>
-                    <option value="30">Every 30 Minutes</option>
-                    <option value="60">Every 1 Hour</option>
-                    <option value="480">Every 8 Hours (Recommended for Streamlit)</option>
-                    <option value="custom">Custom</option>
+                    {urlInput.toLowerCase().includes('.streamlit.app') ? (
+                      <>
+                        <option value="480">Every 8 Hours (Recommended)</option>
+                        <option value="600">Every 10 Hours</option>
+                      </>
+                    ) : (
+                      <>
+                        <option value="5" disabled={!dbUser?.is_pro}>
+                          Every 5 Minutes {!dbUser?.is_pro && "(Pro Only)"}
+                        </option>
+                        <option value="10">Every 10 Minutes</option>
+                        <option value="15">Every 15 Minutes</option>
+                        <option value="30">Every 30 Minutes</option>
+                        <option value="60">Every 1 Hour</option>
+                        <option value="480">Every 8 Hours (Recommended for Streamlit)</option>
+                        <option value="custom">Custom</option>
+                      </>
+                    )}
                   </select>
                 </div>
 

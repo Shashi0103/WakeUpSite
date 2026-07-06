@@ -80,6 +80,11 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Schedule must be between 10 and 1440 minutes for the Free tier.' }, { status: 400 });
       }
 
+      const isStreamlit = trimmedUrl.toLowerCase().includes('.streamlit.app');
+      if (isStreamlit && minutes !== 480 && minutes !== 600) {
+        return NextResponse.json({ error: 'Streamlit websites strictly require an interval of 8 hours (480 mins) or 10 hours (600 mins).' }, { status: 400 });
+      }
+
       const websites = await mockDb.getWebsites(user.id);
       if (websites.length >= 5) {
         return NextResponse.json({ error: 'Free tier is limited to 5 websites. Upgrade to Pro for unlimited websites!' }, { status: 400 });
@@ -120,6 +125,11 @@ export async function POST(req: Request) {
     const minMinutes = user.is_pro ? 5 : 10;
     if (isNaN(minutes) || minutes < minMinutes || minutes > 1440) {
       return NextResponse.json({ error: `Schedule must be between ${minMinutes} and 1440 minutes.` }, { status: 400 });
+    }
+
+    const isStreamlit = trimmedUrl.toLowerCase().includes('.streamlit.app');
+    if (isStreamlit && minutes !== 480 && minutes !== 600) {
+      return NextResponse.json({ error: 'Streamlit websites strictly require an interval of 8 hours (480 mins) or 10 hours (600 mins).' }, { status: 400 });
     }
 
     // Check tier limits (Free tier: max 5 websites, Pro tier: unlimited)
