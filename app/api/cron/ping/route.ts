@@ -69,7 +69,7 @@ export async function GET(req: Request) {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 code: `
-                  module.exports = async ({ page }) => {
+                  export default async ({ page }) => {
                     await page.goto('${site.website_url}', { waitUntil: 'networkidle2', timeout: 30000 });
                     
                     const wakeButton = await page.evaluateHandle(() => {
