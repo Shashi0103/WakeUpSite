@@ -79,16 +79,15 @@ export async function GET(req: Request) {
                     
                     const element = await wakeButton.asElement();
                     if (element) {
-                      console.log('Streamlit app is asleep. Clicking wake up button...');
                       await element.click();
                       try {
                         await page.waitForSelector('.stApp', { timeout: 50000 });
-                        console.log('Streamlit app loaded successfully.');
+                        return { status: 'woken', details: 'Streamlit app loaded successfully.' };
                       } catch (e) {
-                        console.log('Timeout waiting for Streamlit container to load.');
+                        return { status: 'timeout', details: 'Timeout waiting for Streamlit container to load.' };
                       }
                     } else {
-                      console.log('Streamlit app is already awake.');
+                      return { status: 'awake', details: 'Streamlit app is already awake.' };
                     }
                   };
                 `
@@ -100,8 +99,8 @@ export async function GET(req: Request) {
               throw new Error(`Browserless API returned status ${response.status}: ${errText}`);
             }
 
-            const resData = await response.json();
-            console.log(`[Cron Job] Browserless response logs:`, resData.logs || 'No logs');
+            const resText = await response.text();
+            console.log(`[Cron Job] Browserless response for ${site.website_name}:`, resText);
 
             const nextPing = new Date(Date.now() + site.schedule_minutes * 60 * 1000);
             if (isMock) {
