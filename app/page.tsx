@@ -359,19 +359,26 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold tracking-tight mb-2">
-                    Special Note for Streamlit Cloud & Hugging Face Spaces
+                    Special Note for Streamlit Cloud & Community Apps
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                    Some hosting providers (like Streamlit Cloud, Gradio, or Hugging Face Spaces) implement a click-to-wake mechanism that shows a static "App is asleep" button. A simple automated ping cannot wake them up once they have already gone to sleep.
+                    Streamlit Community Cloud puts apps into a deep hibernation state with a static &quot;Wake up&quot; button that normal ping tools cannot trigger. We support two methods to keep them active:
                   </p>
-                  <div className="bg-secondary/40 rounded-xl p-4 text-xs space-y-2 border border-border">
-                    <h4 className="font-semibold text-foreground uppercase tracking-wider text-[10px]">How to keep these sites online:</h4>
-                    <ol className="list-decimal list-inside space-y-1.5 text-muted-foreground">
-                      <li>First, wake up your Streamlit or Hugging Face Space **manually** by clicking its wake-up button.</li>
-                      <li>Copy the active URL and add it to your **WakeUpSite Dashboard**.</li>
-                      <li>Set the schedule to **Every 15 Minutes** or less.</li>
-                      <li>Our pings will generate constant traffic, preventing the platform from ever entering sleep state!</li>
-                    </ol>
+                  
+                  <div className="space-y-4">
+                    <div className="bg-secondary/40 rounded-xl p-4 text-xs space-y-1.5 border border-border">
+                      <h4 className="font-bold text-primary uppercase tracking-wider text-[10px]">Option 1: Rehost on Render / Railway</h4>
+                      <p className="text-muted-foreground leading-normal">
+                        Redeploy your Streamlit app on a free hosting platform like <strong>Render</strong> or <strong>Railway</strong> and paste the link here. Since they run standard containers, they wake up instantly via normal HTTP pings.
+                      </p>
+                    </div>
+
+                    <div className="bg-secondary/40 rounded-xl p-4 text-xs space-y-1.5 border border-border">
+                      <h4 className="font-bold text-primary uppercase tracking-wider text-[10px]">Option 2: Direct Streamlit Link (Headless Browser)</h4>
+                      <p className="text-muted-foreground leading-normal">
+                        Paste your Streamlit link directly! To protect free cloud resources, Streamlit URLs are strictly restricted to an <strong>8 to 10 hour interval</strong>. This is fully sufficient since Streamlit apps only hibernate after 12 hours of total inactivity. Our system will automatically launch a headless cloud browser to click the wake button for you!
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
