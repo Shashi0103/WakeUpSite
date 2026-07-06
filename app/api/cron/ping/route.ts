@@ -57,57 +57,133 @@ export async function GET(req: Request) {
     // Ping all due websites concurrently
     const results = await Promise.allSettled(
       dueWebsites.map(async (site) => {
-        console.log(`[Cron Job] Pinging ${site.website_name} (${site.website_url})...`);
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout for ping
+        const isStreamlit = site.website_url.includes('.streamlit.app');
+        const browserlessToken = process.env.BROWSERLESS_TOKEN;
 
-          const res = await fetch(site.website_url, {
-            method: 'GET',
-            headers: { 'User-Agent': 'WakeUpSite-Ping-Bot/1.0' },
-            redirect: 'manual',
-            signal: controller.signal,
-          });
-          clearTimeout(timeoutId);
-
-          const nextPing = new Date(Date.now() + site.schedule_minutes * 60 * 1000);
-
-          if (isMock) {
-            await mockDb.updateWebsite(site.id, {
-              last_ping_at: new Date().toISOString(),
-              next_ping_at: nextPing.toISOString(),
+        if (isStreamlit && browserlessToken) {
+          console.log(`[Cron Job] Waking up Streamlit app: ${site.website_name} (${site.website_url}) via Browserless...`);
+          try {
+            const browserlessUrl = `https://chrome.browserless.io/run?token=${browserlessToken}`;
+            const response = await fetch(browserlessUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                code: `
+                  module.exports = async ({ page }) => {
+                    await page.goto('${site.website_url}', { waitUntil: 'networkidle2', timeout: 30000 });
+                    
+                    const wakeButton = await page.evaluateHandle(() => {
+                      const buttons = Array.from(document.querySelectorAll('button'));
+                      return buttons.find(b => b.textContent && b.textContent.includes('get this app back up'));
+                    });
+                    
+                    const element = await wakeButton.asElement();
+                    if (element) {
+                      console.log('Streamlit app is asleep. Clicking wake up button...');
+                      await element.click();
+                      try {
+                        await page.waitForSelector('.stApp', { timeout: 50000 });
+                        console.log('Streamlit app loaded successfully.');
+                      } catch (e) {
+                        console.log('Timeout waiting for Streamlit container to load.');
+                      }
+                    } else {
+                      console.log('Streamlit app is already awake.');
+                    }
+                  };
+                `
+              })
             });
-          } else {
-            await db.website.update({
-              where: { id: site.id },
-              data: {
-                last_ping_at: new Date(),
-                next_ping_at: nextPing,
-              },
-            });
+
+            if (!response.ok) {
+              const errText = await response.text();
+              throw new Error(`Browserless API returned status ${response.status}: ${errText}`);
+            }
+
+            const resData = await response.json();
+            console.log(`[Cron Job] Browserless response logs:`, resData.logs || 'No logs');
+
+            const nextPing = new Date(Date.now() + site.schedule_minutes * 60 * 1000);
+            if (isMock) {
+              await mockDb.updateWebsite(site.id, {
+                last_ping_at: new Date().toISOString(),
+                next_ping_at: nextPing.toISOString(),
+              });
+            } else {
+              await db.website.update({
+                where: { id: site.id },
+                data: {
+                  last_ping_at: new Date(),
+                  next_ping_at: nextPing,
+                },
+              });
+            }
+
+            return { site: site.website_name, status: 'woken', success: true };
+          } catch (err: any) {
+            console.error(`[Cron Job] Browserless wake up failed for ${site.website_name}:`, err.message);
+            return await standardPing(site);
           }
-
-          return { site: site.website_name, status: res.status, success: true };
-        } catch (err: any) {
-          console.error(`[Cron Job] Ping failed for ${site.website_name}:`, err.message);
-          const nextPing = new Date(Date.now() + site.schedule_minutes * 60 * 1000);
-
-          if (isMock) {
-            await mockDb.updateWebsite(site.id, {
-              last_ping_at: new Date().toISOString(),
-              next_ping_at: nextPing.toISOString(),
-            });
-          } else {
-            await db.website.update({
-              where: { id: site.id },
-              data: {
-                last_ping_at: new Date(),
-                next_ping_at: nextPing,
-              },
-            });
+        } else {
+          if (isStreamlit && !browserlessToken) {
+            console.warn(`[Cron Job] Streamlit app ${site.website_name} detected, but BROWSERLESS_TOKEN is not configured. Falling back to HTTP ping.`);
           }
+          return await standardPing(site);
+        }
 
-          return { site: site.website_name, error: err.message, success: false };
+        async function standardPing(siteRecord: typeof site) {
+          console.log(`[Cron Job] Sending standard HTTP ping to ${siteRecord.website_name} (${siteRecord.website_url})...`);
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout for ping
+
+            const res = await fetch(siteRecord.website_url, {
+              method: 'GET',
+              headers: { 'User-Agent': 'WakeUpSite-Ping-Bot/1.0' },
+              redirect: 'manual',
+              signal: controller.signal,
+            });
+            clearTimeout(timeoutId);
+
+            const nextPing = new Date(Date.now() + siteRecord.schedule_minutes * 60 * 1000);
+
+            if (isMock) {
+              await mockDb.updateWebsite(siteRecord.id, {
+                last_ping_at: new Date().toISOString(),
+                next_ping_at: nextPing.toISOString(),
+              });
+            } else {
+              await db.website.update({
+                where: { id: siteRecord.id },
+                data: {
+                  last_ping_at: new Date(),
+                  next_ping_at: nextPing,
+                },
+              });
+            }
+
+            return { site: siteRecord.website_name, status: res.status, success: true };
+          } catch (err: any) {
+            console.error(`[Cron Job] Ping failed for ${siteRecord.website_name}:`, err.message);
+            const nextPing = new Date(Date.now() + siteRecord.schedule_minutes * 60 * 1000);
+
+            if (isMock) {
+              await mockDb.updateWebsite(siteRecord.id, {
+                last_ping_at: new Date().toISOString(),
+                next_ping_at: nextPing.toISOString(),
+              });
+            } else {
+              await db.website.update({
+                where: { id: siteRecord.id },
+                data: {
+                  last_ping_at: new Date(),
+                  next_ping_at: nextPing,
+                },
+              });
+            }
+
+            return { site: siteRecord.website_name, error: err.message, success: false };
+          }
         }
       })
     );
