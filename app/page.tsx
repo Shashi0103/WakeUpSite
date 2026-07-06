@@ -379,6 +379,13 @@ export default function LandingPage() {
                         Paste your Streamlit link directly! To protect free cloud resources, Streamlit URLs are strictly restricted to an <strong>8 to 10 hour interval</strong>. This is fully sufficient since Streamlit apps only hibernate after 12 hours of total inactivity. Our system will automatically launch a headless cloud browser to click the wake button for you!
                       </p>
                     </div>
+
+                    <div className="bg-secondary/40 rounded-xl p-4 text-xs space-y-1.5 border border-border">
+                      <h4 className="font-bold text-primary uppercase tracking-wider text-[10px]">Option 3: Hugging Face Spaces & Gradio</h4>
+                      <p className="text-muted-foreground leading-normal">
+                        For Hugging Face Spaces, paste your Space URL directly and choose a standard schedule (like <strong>Every 1 Hour</strong>). Our regular pings generate constant HTTP traffic, which is fully sufficient to prevent Hugging Face from entering its sleep state!
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
