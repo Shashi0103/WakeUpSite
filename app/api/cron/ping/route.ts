@@ -63,7 +63,7 @@ export async function GET(req: Request) {
         if (isStreamlit && browserlessToken) {
           console.log(`[Cron Job] Waking up Streamlit app: ${site.website_name} (${site.website_url}) via Browserless...`);
           try {
-            const browserlessUrl = `https://chrome.browserless.io/run?token=${browserlessToken}`;
+            const browserlessUrl = `https://chrome.browserless.io/function?token=${browserlessToken}`;
             const response = await fetch(browserlessUrl, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
