@@ -521,7 +521,7 @@ export default function LandingPage() {
                 },
                 {
                   q: 'Can WakeUpSite wake up Streamlit Cloud and Hugging Face Spaces?',
-                  a: 'Yes, we have native solutions for both! (1) For Streamlit Community Cloud: Simply paste your link directly and select either an 8 or 10-hour interval. Our serverless worker will launch a headless cloud browser (via Browserless.io) to load the page, detect the static "Wake up" button, click it, and wait for your app to load automatically. (2) For Hugging Face Spaces: Paste your Space URL directly and choose a standard interval (e.g., Every 1 Hour). Regular HTTP pings will generate sufficient traffic to keep the container from sleeping.',
+                  a: 'Yes, we have native solutions for both! (1) For Streamlit Community Cloud: Simply paste your link directly and select either an 8 or 10-hour interval. Our system will automatically trigger the wake-up button and keep your app fully active in the background. (2) For Hugging Face Spaces: Paste your Space URL directly and choose a standard interval (e.g., Every 1 Hour). Regular HTTP pings will generate sufficient traffic to keep the container from sleeping.',
                 },
               ].map((faq, index) => (
                 <div
