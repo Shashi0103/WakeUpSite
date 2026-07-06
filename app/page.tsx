@@ -552,8 +552,8 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-card">
-        <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <footer className="border-t border-border bg-card py-12">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center justify-center gap-6 text-center">
           <Link href="/" className="flex items-center gap-1 select-none">
             <span className="text-sm font-extrabold tracking-tight">
               <span className="text-primary">WakeUp</span>
@@ -561,7 +561,7 @@ export default function LandingPage() {
             </span>
           </Link>
 
-          <div className="flex flex-col items-center gap-1 text-center">
+          <div className="flex flex-col items-center gap-1.5">
             <p className="text-xs text-muted-foreground">
               &copy; {new Date().getFullYear()} WakeUpSite. All rights reserved.
             </p>
@@ -585,31 +585,37 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
-            <Link href="/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Terms of Service
-            </Link>
-            <div className="flex items-center gap-3 border-l border-border pl-4">
+          <div className="flex flex-col sm:flex-row items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-4">
+              <Link href="/privacy" className="hover:text-foreground transition-colors">
+                Privacy Policy
+              </Link>
+              <span className="text-border">•</span>
+              <Link href="/terms" className="hover:text-foreground transition-colors">
+                Terms of Service
+              </Link>
+            </div>
+            <div className="hidden sm:block text-border">|</div>
+            <div className="flex items-center gap-4">
               <a 
                 href="mailto:shashisahu0203@gmail.com" 
-                className="text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
+                className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
                 title="Email Me Directly"
               >
-                <Mail className="h-4 w-4" />
+                <Mail className="h-3.5 w-3.5" />
+                <span>Contact</span>
               </a>
               <a 
                 href="https://www.linkedin.com/in/shashi-kumar-583564291" 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
+                className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
                 title="LinkedIn Profile"
               >
-                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
+                <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24">
                   <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                 </svg>
+                <span>LinkedIn</span>
               </a>
             </div>
           </div>
